@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# IDEs
+.vscode/
+.idea/
+
+# Intermediate Coverage file
+.coverage
+
+# Python runtime
+*.pyc
+*.egg-info
+.pytest_cache
+
+# Virtual environments
+venv/
+.venv/
+
+# Mac
+.DS_Store
+
+# Project specific
+# ...
