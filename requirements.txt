@@ -1,0 +1,5 @@
+openpyxl
+pandas
+numpy<2.0
+retromol @ git+https://github.com/moltools/retromol.git@develop
+pydantic

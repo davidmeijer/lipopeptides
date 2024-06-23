@@ -15,7 +15,7 @@ def cli() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("--in-xlsx", required=True, type=str)
-    parser.add_argument("--out-tsv", required=True, type=str)
+    parser.add_argument("--out-csv", required=True, type=str)
     return parser.parse_args()
 
 
@@ -24,7 +24,7 @@ def main() -> None:
     args = cli()
 
     in_xlsx = args.in_xlsx
-    out_tsv = args.out_tsv
+    out_csv = args.out_csv
 
     df = pd.read_excel(in_xlsx)
 
@@ -41,7 +41,7 @@ def main() -> None:
     df.insert(0, 'compound_id', range(1, 1 + len(df)))
 
     # Save to TSV.
-    df.to_csv(out_tsv, sep='\t', index=False)
+    df.to_csv(out_csv, sep=',', index=False)
 
 
 if __name__ == '__main__':
