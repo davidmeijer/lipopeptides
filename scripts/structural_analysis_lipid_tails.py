@@ -1,6 +1,7 @@
 import argparse 
 from collections import deque
 
+import numpy as np
 from rdkit import Chem
 import matplotlib.pyplot as plt
 
@@ -210,6 +211,25 @@ def main():
     plt.ylim(0, 530)
     plt.legend()
     plt.savefig(args.out + "/backbone_lengths.png", dpi=300, bbox_inches="tight")
+    plt.close()
+
+    # print the different counts also as table where every column is position on the backbone
+    with open(args.out + "/backbone_counts.csv", "w") as fo:
+        fo.write("Position," + ",".join([str(i) for i in range(1, max_backbone_len+1)]) + "\n")
+        for i, label in enumerate(labels):
+            fo.write(label + ",")
+            fo.write(",".join([str(x[i]) for x in counts]) + "\n")
+
+    # print the different counts also as table where every row is a label, as png
+    counts = np.array(counts)
+    print(counts.shape)
+    counts = counts.T
+
+    fig, ax = plt.subplots()
+    ax.axis("off")
+    ax.axis("tight")
+    ax.table(cellText=counts, rowLabels=labels, colLabels=[str(i) for i in range(1, max_backbone_len+1)], loc="center")
+    plt.savefig(args.out + "/backbone_counts.png", dpi=300, bbox_inches="tight")
     plt.close()
 
 
