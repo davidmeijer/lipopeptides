@@ -140,7 +140,7 @@ compound_id,compound_name,producing_organism,mibig_cluster,canonical_smiles,lipi
 193,Glidobactin C,Polyangium brachysporum sp. nov. No. K481-B101 (ATCC 53580),BGC0000997,CCCCCCCCCC=CC=CC(=O)NC(C(=O)NC1CC(O)CCNC(=O)C=CC(C)NC1=O)C(C)O,CCCCCCCCCC=CC=CC(=O)O
 194,Glidobactin D,Polyangium brachysporum sp. nov. No. K481-B101 (ATCC 53580),BGC0000997,CCC(O)CCCCC=CC=CC(=O)NC(C(=O)NC1CC(O)CCNC(=O)C=CC(C)NC1=O)C(C)O,CCC(O)CCCCC=CC=CC(=O)O
 195,Glidobactin E,Polyangium brachysporum sp. nov. No. K481-B101 (ATCC 53580),BGC0000997,CCCCCC(O)CC=CC=CC(=O)NC(C(=O)NC1CC(O)CCNC(=O)C=CC(C)NC1=O)C(C)O,CCCCCC(O)CC=CC=CC(=O)O
-196,Glidobactin F,Polyangium brachysporum sp. nov. No. K481-B101 (ATCC 53580),BGC0000997,CCCCCC=CC=CC(=O)NC(C(=O)NC1CC(O)CCNC(=O)C=CC(C)NC1=O)C(C)O,CCCCCC=CC=CC(=O)NC(C(=O)O
+196,Glidobactin F,Polyangium brachysporum sp. nov. No. K481-B101 (ATCC 53580),BGC0000997,CCCCCC=CC=CC(=O)NC(C(=O)NC1CC(O)CCNC(=O)C=CC(C)NC1=O)C(C)O,CCCCCC=CC=CC(=O)NC(C(=O)O)
 197,Glidobactin G,Polyangium brachysporum sp. nov. No. K481-B101 (ATCC 53580),BGC0000997,CCCCCCCC=CC=CC(=O)NC(C(=O)NC1CC(O)CCNC(=O)C=CC(CO)NC1=O)C(C)O,CCCCCCCC=CC=CC(=O)O
 199,Glycinocin A,Streptomyces sp.,,CCC(C)C1NC(=O)C(C(C)O)NC(=O)CNC(=O)C(CC(=O)O)NC(=O)CNC(=O)C(CC(=O)O)NC(=O)CNC(=O)C2CCCCN2C(=O)C(NC(=O)C(CC(=O)O)NC(=O)C=CCCCCCCCCCC(C)C)CNC(=O)C2CCCN2C1=O,CC(C)CCCCCCCCCC=CC(=O)O
 200,Glycinocin B,Streptomyces sp.,,CCC(C)C1NC(=O)C(C(C)O)NC(=O)CNC(=O)C(CC(=O)O)NC(=O)CNC(=O)C(CC(=O)O)NC(=O)CNC(=O)C2CCCCN2C(=O)C(NC(=O)C(CC(=O)O)NC(=O)C=CCCCCCCCCCCC(C)C)CNC(=O)C2CCCN2C1=O,CC(C)CCCCCCCCCCC=CC(=O)O
