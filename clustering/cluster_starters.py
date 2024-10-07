@@ -115,7 +115,7 @@ def plot_starter_pca(ax, mols, labels_category, category_to_color):
     for label in unique_labels:
         # First plot a density plot.
         data = pcs[labels_category == label].T
-        if not data.shape[1] < 10 and label not in ["unknown", "unassigned"]:
+        if label in ["AR", "LCFA", "MCFA", "SCFA"]:
             kde = gaussian_kde(data)
             xgrid = np.linspace(pcs[:, 0].min() - 0.5, pcs[:, 0].max() + 0.5, 100)
             ygrid = np.linspace(pcs[:, 1].min() - 0.5, pcs[:, 1].max() + 0.5, 100)
@@ -123,7 +123,10 @@ def plot_starter_pca(ax, mols, labels_category, category_to_color):
             Z = kde(np.vstack([Xgrid.ravel(), Ygrid.ravel()])).reshape(Xgrid.shape)
             ax.contour(Xgrid, Ygrid, Z, levels=10, colors=category_to_color[label], alpha=0.5, zorder=1)
 
-    for label in unique_labels:
+    # for label in unique_labels:
+    for label in ["AR", "SCFA", "MCFA", "LCFA"]:
+        if label not in ["AR", "LCFA", "MCFA", "SCFA"]:
+            continue
         jitter = 0.05
         x = pcs[labels_category == label, 0]
         y = pcs[labels_category == label, 1]
@@ -144,9 +147,9 @@ def plot_starter_pca(ax, mols, labels_category, category_to_color):
 
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_xlabel(f"PC 1 ({explained_variance[0] * 100:.2f}%)", fontsize=12)
-    ax.set_ylabel(f"PC 2 ({explained_variance[1] * 100:.2f}%)", fontsize=12)
-    ax.legend(title="Category", title_fontsize="12", fontsize="11")
+    ax.set_xlabel(f"PC 1 ({explained_variance[0] * 100:.2f}%)", fontsize=16)
+    ax.set_ylabel(f"PC 2 ({explained_variance[1] * 100:.2f}%)", fontsize=16)
+    ax.legend(title="Category", title_fontsize="16", fontsize="14")
 
 
 def bfs(graph, graph_identity, start_node):
@@ -233,9 +236,9 @@ def index_lipid_tail_starters(ax, mols, backbones, category, category_color, max
         "Hydroxyl": "#56b4e9",
         "Methyl": "#0072b2",
         "Epoxide": "#d55f00",
-        "Amine": "#039e73",
+        "Ketone": "#039e73",
+        "Amine": "#cc79a7",
         "Amine and imine": "#f0e442",
-        "Ketone": "#cc79a7",
     }
     counts = [[0 for _ in range(len(labels) + 1)] for _ in range(max_backbone_len)]
     for mol, backbone in zip(mols, backbones):
@@ -264,22 +267,22 @@ def index_lipid_tail_starters(ax, mols, backbones, category, category_color, max
                 if atom == match[0]:
                     counts[i][3] += 1
 
-            pattern = "[C][NH2]"
+            pattern = "[C][C](=O)[C]"
             matches = mol.GetSubstructMatches(Chem.MolFromSmarts(pattern))
             for match in matches:
-                if atom == match[0]:
+                if atom == match[1]:
                     counts[i][4] += 1
 
-            pattern = "[C][NH][C]=[N]"
+            pattern = "[C][NH2]"
             matches = mol.GetSubstructMatches(Chem.MolFromSmarts(pattern))
             for match in matches:
                 if atom == match[0]:
                     counts[i][5] += 1
 
-            pattern = "[C][C](=O)[C]"
+            pattern = "[C][NH][C]=[N]"
             matches = mol.GetSubstructMatches(Chem.MolFromSmarts(pattern))
             for match in matches:
-                if atom == match[1]:
+                if atom == match[0]:
                     counts[i][6] += 1
     
             counts[i][7] += 1
@@ -329,24 +332,24 @@ def index_lipid_tail_starters(ax, mols, backbones, category, category_color, max
                 zorder=100
             )
             bottom = [sum(x) for x in zip(bottom, [x[i] for x in counts])]
-    ax.set_ylim(0, 1.4 * max_height)
+    ax.set_ylim(0, 1.1 * max_height)
     if set_xaxis_label:
-        ax.set_xlabel(f"Backbone position (starting at {ALPHA_GREEK}-carbon)", fontsize=12)
+        ax.set_xlabel(f"Backbone position (starting at {ALPHA_GREEK}-carbon)", fontsize=16)
 
-    ax.text(
-        0.05, 0.92, 
-        f"{category}",
-        transform=ax.transAxes,
-        fontsize=12, verticalalignment='top',
-        bbox=dict(
-            facecolor=category_color,
-            alpha=0.8,
-            edgecolor='black',
-            boxstyle='square,pad=0.5')
-            # boxstyle='round,pad=0.5')
-        )
+    # ax.text(
+    #     0.05, 0.92, 
+    #     f"{category}",
+    #     transform=ax.transAxes,
+    #     fontsize=12, verticalalignment='top',
+    #     bbox=dict(
+    #         facecolor=category_color,
+    #         alpha=0.8,
+    #         edgecolor='black',
+    #         boxstyle='square,pad=0.5')
+    #         # boxstyle='round,pad=0.5')
+    #     )
 
-    ax.legend(title_fontsize="12", fontsize="11")
+    ax.legend(title_fontsize="16", fontsize="14", title=f"{category} properties")
 
 
 def main() -> None:
@@ -391,28 +394,16 @@ def main() -> None:
         "SCFA": palette[4],
     }
 
-    fig = plt.figure(figsize=(18, 14))
-    gs = fig.add_gridspec(5, 3)
+    fig = plt.figure(figsize=(18, 12))
+    gs = fig.add_gridspec(4, 3)
 
-    # Dummy plot with just label for AR.
-    ax6 = fig.add_subplot(gs[0:2, 0])
-    ax6.text(
-        0.05, 0.95, 
-        "AR",
-        transform=ax6.transAxes,
-        fontsize=12, verticalalignment='top',
-        bbox=dict(
-            facecolor=category_to_color["AR"],
-            alpha=0.8,
-            edgecolor='black',
-            boxstyle='square,pad=0.5'
-        )
-    )
-    # remove axis
-    ax6.axis("off")
+    # # Dummy plot with just label for AR.
+    # ax6 = fig.add_subplot(gs[2, 0])
+    # # remove axis
+    # ax6.axis("off")
 
     # Plot PCA for all starter structures.
-    ax1 = fig.add_subplot(gs[0:2, 1])
+    ax1 = fig.add_subplot(gs[1:3, 0:2])
     plot_starter_pca(ax1, starter_mols, labels_category, category_to_color)
 
     # Calculate max backbone lengths.
@@ -432,21 +423,25 @@ def main() -> None:
     max_category_size = max([sum(labels_category == category) for category in category_to_color])
 
     # Index FA starters.
-    ax2 = fig.add_subplot(gs[2, 0])
-    index_lipid_tail_starters(
-        ax2,
-        [m for m, l in zip(starter_mols, labels_category) if l == "FA"],
-        [b for b, l in zip(backbones, labels_category) if l == "FA"],
-        "FA",
-        category_to_color["FA"],
-        # max_category_size,
-        len([c for c in labels_category if c == "FA"]),
-        max_backbone_len,
-        set_xaxis_label=True
-    )
+    # ax2 = fig.add_subplot(gs[2, 0])
+    # index_lipid_tail_starters(
+    #     ax2,
+    #     [m for m, l in zip(starter_mols, labels_category) if l == "FA"],
+    #     [b for b, l in zip(backbones, labels_category) if l == "FA"],
+    #     "FA",
+    #     category_to_color["FA"],
+    #     # max_category_size,
+    #     len([c for c in labels_category if c == "FA"]),
+    #     max_backbone_len,
+    #     set_xaxis_label=True
+    # )
+
+    # make row space between ax3, ax4, ax5 lower, so only column 1
+    sub_gs1 = gs[:, 2].subgridspec(4, 1, hspace=0.01)
 
     # Index LCFA starters.
-    ax3 = fig.add_subplot(gs[3, 0])
+    # ax3 = fig.add_subplot(gs[2, 1])
+    ax3 = fig.add_subplot(sub_gs1[3, 0])
     index_lipid_tail_starters(
         ax3,
         [m for m, l in zip(starter_mols, labels_category) if l == "LCFA"],
@@ -460,7 +455,8 @@ def main() -> None:
     )
 
     # Index MCFA starters.
-    ax4 = fig.add_subplot(gs[2, 1])
+    # ax4 = fig.add_subplot(gs[1, 1])
+    ax4 = fig.add_subplot(sub_gs1[2, 0])
     index_lipid_tail_starters(
         ax4,
         [m for m, l in zip(starter_mols, labels_category) if l == "MCFA"],
@@ -470,11 +466,12 @@ def main() -> None:
         # max_category_size,
         len([c for c in labels_category if c == "MCFA"]),
         max_backbone_len,
-        set_xaxis_label=True
+        set_xaxis_label=False
     )
 
     # Index SCFA starters.
-    ax5 = fig.add_subplot(gs[3, 1])
+    # ax5 = fig.add_subplot(gs[0, 1])
+    ax5 = fig.add_subplot(sub_gs1[1, 0])
     index_lipid_tail_starters(
         ax5,
         [m for m, l in zip(starter_mols, labels_category) if l == "SCFA"],
@@ -484,11 +481,16 @@ def main() -> None:
         # max_category_size,
         len([c for c in labels_category if c == "SCFA"]),
         max_backbone_len,
-        set_xaxis_label=True
+        set_xaxis_label=False
     )
 
+    ########################################################################################################################
+    ########################################################################################################################
+    ########################################################################################################################
+    ########################################################################################################################
+
     # Make bar plot of backbone lengths.
-    ax7 = fig.add_subplot(gs[2, 2])
+    ax7 = fig.add_subplot(gs[0, 1])
     ax7.hist(backbone_lens, bins=range(1, max_backbone_len+2), edgecolor="black", facecolor="#ceccca", zorder=100)
     max_bin_size = max([backbone_lens.count(i) for i in range(1, max_backbone_len+1)])
     ax7.grid(axis="y", linestyle="--", alpha=0.5, zorder=0)
@@ -502,7 +504,13 @@ def main() -> None:
         [str(i) for i in range(0, int(1.1 * max_bin_size), 5)],
         fontsize=11
     )
-    ax7.set_xlabel("Backbone length", fontsize=12)
+    ax7.set_xlabel(f"Backbone length (including {ALPHA_GREEK}-carbon)", fontsize=16)
+
+
+    ########################################################################################################################
+    ########################################################################################################################
+    ########################################################################################################################
+    ########################################################################################################################
 
     # Get bond order plot of backbone.
     counted = 0
@@ -528,7 +536,7 @@ def main() -> None:
         bond_orders_2_heights.append(count_2)
         bond_orders_3_heights.append(count_3)
 
-    ax8 = fig.add_subplot(gs[3, 2])
+    ax8 = fig.add_subplot(gs[0, 0])
     ax8.bar(range(1, max_backbone_len + 1), bond_orders_2_heights, color="#23aae1", edgecolor="black", label=f"Double bonds ({sum(bond_orders_2_heights)})", bottom=[0 for _ in range(max_backbone_len)], facecolor=palette[-2])
     ax8.bar(range(1, max_backbone_len + 1), bond_orders_3_heights, color="#f9a11b", edgecolor="black", label=f"Triple bonds ({sum(bond_orders_3_heights)})", bottom=bond_orders_2_heights, facecolor=palette[-1])
     ax8.bar(range(1, max_backbone_len + 1), bond_orders_1_heights, color="#f9e11b", edgecolor="black", label=f"Single bonds ({sum(bond_orders_1_heights)})", bottom=[sum(x) for x in zip(bond_orders_2_heights, bond_orders_3_heights)], facecolor="#ceccca")
@@ -548,19 +556,19 @@ def main() -> None:
     # Change order of labels in legend: single > double > triple
     handles, labels = ax8.get_legend_handles_labels()
     order = [2, 0, 1]
-    ax8.legend([handles[idx] for idx in order], [labels[idx] for idx in order], fontsize=11, title_fontsize=12, title="Saturation")
+    ax8.legend([handles[idx] for idx in order], [labels[idx] for idx in order], fontsize=14, title_fontsize=16, title="Saturation")
 
     ax8.grid(axis="y", linestyle="--", alpha=0.5)
     
-    ax8.set_xlabel(f"Backbone position (starting at {ALPHA_GREEK}-carbon)", fontsize=12)
+    ax8.set_xlabel(f"Backbone position (starting at {ALPHA_GREEK}-carbon)", fontsize=16)
 
     # Save the entire figure grid to a file.
     path_out = os.path.join(args.o, "cheminformatics_analysis.png")
-    plt.subplots_adjust(hspace=0.25, wspace=0.1)
+    plt.subplots_adjust(hspace=0.4, wspace=0.15)
     # plt.tight_layout()
     # Remove space around plot.
     plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
-    plt.savefig(path_out, dpi=600)
+    plt.savefig(path_out, dpi=600, transparent=True)
 
     ######
 
