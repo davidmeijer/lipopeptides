@@ -238,7 +238,7 @@ def index_lipid_tail_starters(ax, mols, backbones, category, category_color, max
         "Epoxide": "#d55f00",
         "Ketone": "#039e73",
         "Amine": "#cc79a7",
-        "Amine and imine": "#f0e442",
+        "Imine": "#f0e442",
     }
     counts = [[0 for _ in range(len(labels) + 1)] for _ in range(max_backbone_len)]
     for mol, backbone in zip(mols, backbones):
@@ -349,7 +349,12 @@ def index_lipid_tail_starters(ax, mols, backbones, category, category_color, max
     #         # boxstyle='round,pad=0.5')
     #     )
 
-    ax.legend(title_fontsize="16", fontsize="14", title=f"{category} properties")
+    ax.legend(
+        markerfirst=False,
+        title_fontsize="16", 
+        fontsize="14", 
+        title=f"{category} properties"
+    )
 
 
 def main() -> None:
@@ -538,7 +543,7 @@ def main() -> None:
 
     ax8 = fig.add_subplot(gs[0, 0])
     ax8.bar(range(1, max_backbone_len + 1), bond_orders_2_heights, color="#23aae1", edgecolor="black", label=f"Double bonds ({sum(bond_orders_2_heights)})", bottom=[0 for _ in range(max_backbone_len)], facecolor=palette[-2])
-    ax8.bar(range(1, max_backbone_len + 1), bond_orders_3_heights, color="#f9a11b", edgecolor="black", label=f"Triple bonds ({sum(bond_orders_3_heights)})", bottom=bond_orders_2_heights, facecolor=palette[-1])
+    # ax8.bar(range(1, max_backbone_len + 1), bond_orders_3_heights, color="#f9a11b", edgecolor="black", label=f"Triple bonds ({sum(bond_orders_3_heights)})", bottom=bond_orders_2_heights, facecolor=palette[-1])
     ax8.bar(range(1, max_backbone_len + 1), bond_orders_1_heights, color="#f9e11b", edgecolor="black", label=f"Single bonds ({sum(bond_orders_1_heights)})", bottom=[sum(x) for x in zip(bond_orders_2_heights, bond_orders_3_heights)], facecolor="#ceccca")
     ax8.set_ylim(0, 1.1 * max([sum(x) for x in zip(bond_orders_1_heights, bond_orders_2_heights, bond_orders_3_heights)]))
     ax8.set_xticks(
@@ -553,9 +558,9 @@ def main() -> None:
     )
     # ax8.legend(fontsize=11, title_fontsize=12, title="Saturation")
 
-    # Change order of labels in legend: single > double > triple
+    # Change order of labels in legend: single > double
     handles, labels = ax8.get_legend_handles_labels()
-    order = [2, 0, 1]
+    order = [1, 0]
     ax8.legend([handles[idx] for idx in order], [labels[idx] for idx in order], fontsize=14, title_fontsize=16, title="Saturation")
 
     ax8.grid(axis="y", linestyle="--", alpha=0.5)
@@ -564,7 +569,7 @@ def main() -> None:
 
     # Save the entire figure grid to a file.
     path_out = os.path.join(args.o, "cheminformatics_analysis.png")
-    plt.subplots_adjust(hspace=0.4, wspace=0.15)
+    plt.subplots_adjust(hspace=0.8, wspace=0.15)
     # plt.tight_layout()
     # Remove space around plot.
     plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
