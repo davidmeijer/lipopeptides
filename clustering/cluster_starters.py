@@ -295,7 +295,7 @@ def index_lipid_tail_starters(ax, mols, backbones, category, category_color, max
     if set_xaxis_label:
         ax.set_xticks(
             [i for i in range(1, max_backbone_len+1)], 
-            ["", "1"] + [str(i) if (i) % 5 == 0 else "" for i in range(2, max_backbone_len)],
+            ["1"] + [str(i) if (i) % 5 == 0 else "" for i in range(1, max_backbone_len)],
             fontsize=11
         )
     else:
@@ -548,7 +548,7 @@ def main() -> None:
     ax8.set_ylim(0, 1.1 * max([sum(x) for x in zip(bond_orders_1_heights, bond_orders_2_heights, bond_orders_3_heights)]))
     ax8.set_xticks(
         [0.5] + [i + 0.5 for i in range(1, max_backbone_len+1)], 
-        ["", "1"] + [str(i + 1) if (i + 1) % 5 == 0 else "" for i in range(1, max_backbone_len)],
+        ["1"] + [str(i + 1) if (i + 1) % 5 == 0 else "" for i in range(0, max_backbone_len)],
         fontsize=11
     )
     ax8.set_yticks(
